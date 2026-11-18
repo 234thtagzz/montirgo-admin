@@ -206,3 +206,4 @@ npx tsc --noEmit # type-check
 3. Deploy, lalu login dengan akun admin.
 4. Pertimbangkan menambahkan rate limit / IP allowlist di depan panel admin.
 # montirgo-admin
+# montirgo-admin
