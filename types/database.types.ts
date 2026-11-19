@@ -706,7 +706,7 @@ export type Database = {
           full_name: string | null
           id: string
           phone_number: string | null
-          role: string
+          role: Database["public"]["Enums"]["app_role"]
           updated_at: string
         }
         Insert: {
@@ -716,7 +716,7 @@ export type Database = {
           full_name?: string | null
           id: string
           phone_number?: string | null
-          role?: string
+          role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
         }
         Update: {
@@ -726,7 +726,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone_number?: string | null
-          role?: string
+          role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
         }
         Relationships: []
@@ -1329,6 +1329,85 @@ export type Database = {
           },
         ]
       }
+      admin_transaction_overview: {
+        Row: {
+          accepted_at: string | null
+          additional_notes: string | null
+          address: string | null
+          arrived_at: string | null
+          client_email: string | null
+          client_id: string
+          client_name: string | null
+          client_phone: string | null
+          completed_at: string | null
+          contact_phone: string
+          created_at: string
+          currency: string
+          id: string
+          invoice_item_count: number
+          invoice_total: number
+          issue_description: string
+          lat: number
+          lng: number
+          mechanic_email: string | null
+          mechanic_id: string | null
+          mechanic_name: string | null
+          mechanic_phone: string | null
+          payment_amount: number | null
+          payment_id: string | null
+          payment_method: string | null
+          payment_method_used: string | null
+          payment_status: string | null
+          paid_at: string | null
+          platform_fee: number | null
+          net_amount: number | null
+          price_amount: number | null
+          status: string
+          symptoms: string | null
+          vehicle_brand: string | null
+          vehicle_id: string | null
+          vehicle_model: string | null
+          vehicle_type: string | null
+          license_plate: string | null
+        }
+        Relationships: []
+      }
+      admin_user_directory: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          certifications: string[] | null
+          client_request_count: number
+          created_at: string
+          current_lat: number | null
+          current_lng: number | null
+          email: string | null
+          experience_years: number | null
+          full_name: string | null
+          id: string
+          identity_number: string | null
+          is_available: boolean | null
+          is_online: boolean | null
+          is_verified: boolean | null
+          last_location_at: string | null
+          mechanic_request_count: number
+          phone_number: string | null
+          rating_avg: number | null
+          rating_count: number | null
+          role: string
+          skills: string[] | null
+          total_earned: number
+          total_jobs: number | null
+          total_spent: number
+          updated_at: string
+          vehicle_count: number
+          vehicle_specialization: string[] | null
+          verified_at: string | null
+          workshop_address: string | null
+          workshop_name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_service_request: { Args: { p_request_id: string }; Returns: Json }
@@ -1435,6 +1514,7 @@ export type Database = {
       }
       finalize_payment: { Args: { p_payment_id: string }; Returns: undefined }
       has_role: { Args: { required_role: string }; Returns: boolean }
+      is_admin: { Args: never; Returns: boolean }
       mechanic_active_order_id: {
         Args: { p_mechanic_id: string }
         Returns: string
@@ -1563,6 +1643,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      set_user_role: {
+        Args: { p_role: string; p_user_id: string }
+        Returns: Database["public"]["Tables"]["profiles"]["Row"]
+      }
       setting_int: {
         Args: { p_default: number; p_key: string }
         Returns: number
@@ -1578,7 +1662,7 @@ export type Database = {
       vehicle_photo_visible: { Args: { p_path: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "client" | "mechanic" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never

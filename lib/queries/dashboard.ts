@@ -1,5 +1,6 @@
 import "server-only"
 
+import { requireAdmin } from "@/lib/auth"
 import { startOfTodayJakarta } from "@/lib/format"
 import { getAdminClient } from "@/lib/supabase/admin"
 
@@ -13,6 +14,9 @@ export type DashboardStats = {
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
+  // service_role membypass RLS: guard wajib di lapisan data, bukan hanya UI.
+  await requireAdmin()
+
   const db = getAdminClient()
   const todayStart = startOfTodayJakarta()
 

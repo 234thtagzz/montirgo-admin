@@ -33,8 +33,9 @@ export const getCurrentUser = cache(async (): Promise<User | null> => {
 })
 
 /**
- * Admin = email ada di allowlist ADMIN_EMAILS, ATAU profiles.role = 'admin'.
- * Allowlist berguna untuk bootstrap admin pertama sebelum ada baris profiles.
+ * Admin = email ada di allowlist ADMIN_EMAILS, ATAU role database = 'admin'.
+ * Allowlist hanya untuk bootstrap admin pertama; sumber kebenaran tetap
+ * `public.has_role('admin')` di database (bukan metadata/string di client).
  */
 export async function isAdminUser(user: User): Promise<boolean> {
   const { adminEmails } = getServerEnv()
@@ -43,13 +44,16 @@ export async function isAdminUser(user: User): Promise<boolean> {
   if (email && adminEmails.includes(email)) return true
 
   const supabase = await createSupabaseServerClient()
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .maybeSingle()
+  const { data, error } = await supabase.rpc("has_role", {
+    required_role: "admin",
+  })
 
-  return profile?.role === "admin"
+  if (error) {
+    console.error("[auth] gagal memeriksa role admin:", error.message)
+    return false
+  }
+
+  return data === true
 }
 
 /**

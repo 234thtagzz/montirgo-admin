@@ -52,8 +52,22 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  if (user && pathname === "/login") {
-    return NextResponse.redirect(new URL("/", request.url))
+  if (user) {
+    // Satu-satunya sumber kebenaran role adalah database (public.has_role).
+    // Jangan pernah menganggap "punya session" sama dengan "punya akses admin".
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      required_role: "admin",
+    })
+
+    if (pathname === "/login") {
+      return NextResponse.redirect(
+        new URL(isAdmin ? "/" : "/unauthorized", request.url)
+      )
+    }
+
+    if (!isPublicPath && !isAdmin) {
+      return NextResponse.redirect(new URL("/unauthorized", request.url))
+    }
   }
 
   return response

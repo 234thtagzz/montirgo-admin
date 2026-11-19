@@ -1,5 +1,6 @@
 import "server-only"
 
+import { requireAdmin } from "@/lib/auth"
 import { TRANSACTIONS_PAGE_SIZE } from "@/lib/constants"
 import { isUuid, sanitizeSearch } from "@/lib/format"
 import { TRANSACTION_STATUS_OPTIONS } from "@/lib/status"
@@ -63,6 +64,9 @@ export async function getTransactions({
   status?: string
   page?: number
 }): Promise<TransactionsResult> {
+  // service_role membypass RLS: guard wajib di lapisan data.
+  await requireAdmin()
+
   const db = getAdminClient()
   const search = sanitizeSearch(query)
   const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1

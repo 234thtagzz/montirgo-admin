@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 
 import { isAdminUser } from "@/lib/auth"
 import { getServerEnv, isAdminAppConfigured } from "@/lib/env"
+import { getAdminClient } from "@/lib/supabase/admin"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 
 export type SignInState = {
@@ -44,7 +45,28 @@ export async function signInAction(
   }
 
   // Pastikan env service role ada sebelum masuk ke panel.
-  getServerEnv()
+  const { adminEmails } = getServerEnv()
+
+  // Bootstrap: email yang ada di ADMIN_EMAILS otomatis dipromosikan menjadi
+  // role 'admin' di database. Dengan begitu role tetap berasal dari DB dan
+  // proxy/RLS dapat menegakkannya pada request berikutnya.
+  const emailLower = data.user.email?.toLowerCase()
+  if (emailLower && adminEmails.includes(emailLower)) {
+    const { error: promoteError } = await getAdminClient()
+      .from("profiles")
+      .upsert(
+        {
+          id: data.user.id,
+          email: data.user.email ?? null,
+          role: "admin",
+        },
+        { onConflict: "id" }
+      )
+
+    if (promoteError) {
+      console.error("[auth] gagal bootstrap role admin:", promoteError.message)
+    }
+  }
 
   redirect("/")
 }

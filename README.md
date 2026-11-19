@@ -42,10 +42,20 @@ yang disalin dari repo mobile bisa langsung dipakai.
 
 ### Membuat akun admin pertama
 
-1. Buat user di Supabase Dashboard → Authentication → Users.
-2. Tambahkan emailnya ke `ADMIN_EMAILS`, **atau** set
-   `profiles.role = 'admin'` untuk user tersebut.
-3. Login di `/login`.
+Role admin adalah role database (`public.app_role` = `client | mechanic |
+admin`) dan **tidak bisa dibuat dari aplikasi mobile**. Signup mobile hanya
+menerima `client`/`mechanic`.
+
+1. Jalankan migration `supabase/migrations/20261119000000_admin_role.sql`
+   (dari repo `montirGo_app`).
+2. Buat user di Supabase Dashboard → Authentication → Users.
+3. Tambahkan emailnya ke `ADMIN_EMAILS`. Saat login pertama, panel otomatis
+   mempromosikan user tersebut menjadi `profiles.role = 'admin'`.
+4. Alternatif lewat Supabase SQL Editor:
+   `update public.profiles set role = 'admin' where id = '<user-id>';`
+   RPC `public.set_user_role('<user-id>', 'admin')` juga tersedia, tetapi hanya
+   untuk sesi `service_role` atau admin yang sudah login (bukan SQL Editor).
+5. Login di `/login`. Akun `client`/`mechanic` ditolak oleh proxy dan login.
 
 ---
 
@@ -158,20 +168,23 @@ npx supabase gen types typescript --project-id <project-ref> --schema public > t
 
 ## 4. Model keamanan
 
-1. **Service role hanya di server.**
+1. **Role berasal dari database, bukan session/metadata.**
+   Database memiliki enum `public.app_role` dengan tiga nilai:
+   `client`, `mechanic`, `admin`. Signup mobile hanya boleh `client`/`mechanic`.
+   Pengecekan memakai `public.has_role('admin')`.
+2. **Service role hanya di server.**
    `lib/supabase/admin.ts` diawali `import "server-only"`, sehingga build gagal
    jika file tersebut tidak sengaja diimpor Client Component.
-2. **Setiap halaman data memanggil `requireAdmin()`.**
-   Guard ini membaca session Supabase, mengecek allowlist/`profiles.role`,
-   dan redirect ke `/login` atau `/unauthorized`.
-3. **Setiap Server Action memanggil `requireAdmin()` lagi.**
-   Server Action dapat dipanggil langsung via POST, bukan hanya dari UI.
-4. **Proxy hanya untuk redirect optimistis.**
-   `proxy.ts` me-refresh cookie session dan mengarahkan user tanpa session,
-   tetapi bukan satu-satunya lapisan otorisasi.
-5. **RLS tetap aktif.**
-   Service role memang membypass RLS, tetapi query admin dibatasi oleh guard
-   dan hanya menyeleksi kolom yang dibutuhkan.
+3. **Proxy memeriksa role, bukan hanya session.**
+   `proxy.ts` memanggil RPC `has_role('admin')`; user login yang bukan admin
+   diarahkan ke `/unauthorized`. Ini menutup akses montir/client ke panel.
+4. **Guard berlapis.**
+   Layout `(dashboard)` memanggil `requireAdmin()` sebelum shell dirender.
+   Setiap halaman data, Server Action, dan fungsi di `lib/queries/*` memanggil
+   `requireAdmin()` lagi karena `service_role` membypass RLS.
+5. **RLS tetap aktif dan admin punya CRUD.**
+   Migration admin menambahkan policy `admin_all` (SELECT/INSERT/UPDATE/DELETE)
+   pada seluruh tabel data. `ADMIN_EMAILS` hanya untuk bootstrap admin pertama.
 
 ---
 

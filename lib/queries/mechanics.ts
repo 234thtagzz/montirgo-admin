@@ -1,5 +1,6 @@
 import "server-only"
 
+import { requireAdmin } from "@/lib/auth"
 import { getAdminClient } from "@/lib/supabase/admin"
 import { MECHANICS_PAGE_SIZE } from "@/lib/constants"
 import {
@@ -46,6 +47,9 @@ export async function getMechanics({
   status?: MechanicStatusFilter
   page?: number
 }): Promise<MechanicsResult> {
+  // service_role membypass RLS: guard wajib di lapisan data.
+  await requireAdmin()
+
   const db = getAdminClient()
   const search = sanitizeSearch(query)
   const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1
