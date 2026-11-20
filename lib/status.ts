@@ -1,4 +1,9 @@
-import type { MechanicStatus, TransactionStatus } from "@/lib/types"
+import type {
+  ComplaintCategory,
+  ComplaintStatus,
+  MechanicStatus,
+  TransactionStatus,
+} from "@/lib/types"
 
 export const TRANSACTION_STATUS_OPTIONS: {
   value: TransactionStatus
@@ -49,6 +54,60 @@ export function getMechanicStatusMeta(status: MechanicStatus) {
     : {
         label: "Menunggu Verifikasi",
         className: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
+      }
+}
+
+export const COMPLAINT_STATUS_OPTIONS: {
+  value: ComplaintStatus
+  label: string
+}[] = [
+  { value: "open", label: "Terbuka" },
+  { value: "in_progress", label: "Diproses" },
+  { value: "resolved", label: "Diselesaikan" },
+  { value: "closed", label: "Ditutup" },
+]
+
+export function getComplaintStatusMeta(status: ComplaintStatus) {
+  const option = COMPLAINT_STATUS_OPTIONS.find((item) => item.value === status)
+
+  const className =
+    status === "open"
+      ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
+      : status === "in_progress"
+        ? "bg-sky-500/10 text-sky-700 dark:text-sky-400"
+        : status === "resolved"
+          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+          : "bg-muted text-muted-foreground"
+
+  return {
+    label: option?.label ?? status,
+    className,
+  }
+}
+
+const COMPLAINT_CATEGORY_LABELS: Record<ComplaintCategory, string> = {
+  pesanan: "Pesanan",
+  pembayaran: "Pembayaran",
+  montir: "Montir & teknisi",
+  aplikasi: "Aplikasi",
+  lainnya: "Lainnya",
+}
+
+export function getComplaintCategoryLabel(category: string) {
+  return (
+    COMPLAINT_CATEGORY_LABELS[category as ComplaintCategory] ?? category
+  )
+}
+
+export function getReporterRoleMeta(role: string) {
+  return role === "mechanic"
+    ? {
+        label: "Montir",
+        className: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-400",
+      }
+    : {
+        label: "Client",
+        className: "bg-sky-500/10 text-sky-700 dark:text-sky-400",
       }
 }
 

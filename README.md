@@ -76,16 +76,17 @@ app/
     ├── montir/
     │   ├── page.tsx            # Tabel montir + filter + pagination
     │   ├── actions.ts          # Server Action verifikasi montir
+    │   ├── mechanic-detail-dialog.tsx  # Detail profil sebelum verifikasi
     │   └── verify-mechanic-button.tsx
     ├── transaksi/
     │   ├── page.tsx            # Tabel transaksi
     │   ├── status-options.ts
     │   └── transaction-detail-dialog.tsx  # Invoice terperinci
-    └── sengketa/page.tsx       # Placeholder modul sengketa
+    └── keluhan/page.tsx        # Tabel keluhan client & montir
 
 components/
 ├── layout/
-│   ├── app-sidebar.tsx         # Navigasi (Dashboard, Montir, Transaksi, Sengketa)
+│   ├── app-sidebar.tsx         # Navigasi (Dashboard, Montir, Transaksi, Keluhan)
 │   ├── top-bar.tsx             # Header + trigger sidebar
 │   └── user-menu.tsx           # Menu akun + logout
 ├── data-table/
@@ -100,16 +101,19 @@ lib/
 ├── supabase/
 │   ├── admin.ts                # SERVICE ROLE client (server-only)
 │   ├── server.ts               # ANON client + cookie (auth)
+│   ├── storage.ts              # Signed URL untuk bucket privat
 │   └── database.types.ts       # Tipe tabel yang dipakai admin
 ├── queries/
 │   ├── dashboard.ts            # Agregat statistik
-│   ├── mechanics.ts            # Query daftar montir
+│   ├── mechanics.ts            # Query daftar montir + detail verifikasi
+│   ├── complaints.ts           # Query keluhan client & montir
 │   └── transactions.ts         # Query transaksi + invoice
 ├── actions/
 │   └── auth.ts                 # signIn / signOut
 ├── auth.ts                     # requireAdmin() guard
 ├── env.ts                      # Validasi environment
 ├── format.ts                   # Rupiah, tanggal WIB, telepon, dll.
+├── mechanic.ts                 # Label spesialisasi kendaraan montir
 ├── status.ts                   # Label & warna status
 ├── types.ts                    # Tipe domain (Mechanic, Transaction, …)
 └── constants.ts

@@ -2,6 +2,7 @@ import "server-only"
 
 import { requireAdmin } from "@/lib/auth"
 import { getAdminClient } from "@/lib/supabase/admin"
+import { getSignedStorageUrls } from "@/lib/supabase/storage"
 import { MECHANICS_PAGE_SIZE } from "@/lib/constants"
 import {
   formatCoordinate,
@@ -15,22 +16,37 @@ import type {
 
 export type MechanicStatusFilter = "all" | "pending" | "active"
 
+const WORKSHOP_PHOTO_BUCKET = "workshop-photos"
+
 type RawMechanicRow = {
   profile_id: string
   workshop_name: string | null
   workshop_address: string | null
   is_verified: boolean
+  is_available: boolean
   is_online: boolean
   rating_avg: number
+  rating_count: number
   total_jobs: number
   current_lat: number | null
   current_lng: number | null
+  last_location_at: string | null
+  bio: string | null
+  experience_years: number | null
+  skills: string[] | null
+  vehicle_specialization: string[] | null
+  certifications: string[] | null
+  identity_number: string | null
+  workshop_photos: string[] | null
+  verified_at: string | null
   created_at: string
+  updated_at: string
   profiles: {
     id: string
     full_name: string | null
     email: string | null
     phone_number: string | null
+    avatar_url: string | null
   }
 }
 
@@ -84,9 +100,11 @@ export async function getMechanics({
   let mechanicQuery = db
     .from("mechanic_profiles")
     .select(
-      `profile_id, workshop_name, workshop_address, is_verified, is_online,
-       rating_avg, total_jobs, current_lat, current_lng, created_at,
-       profiles!mechanic_profiles_profile_id_fkey!inner(id, full_name, email, phone_number)`,
+      `profile_id, workshop_name, workshop_address, is_verified, is_available, is_online,
+       rating_avg, rating_count, total_jobs, current_lat, current_lng, last_location_at,
+       bio, experience_years, skills, vehicle_specialization, certifications,
+       identity_number, workshop_photos, verified_at, created_at, updated_at,
+       profiles!mechanic_profiles_profile_id_fkey!inner(id, full_name, email, phone_number, avatar_url)`,
       { count: "exact" }
     )
     .order("created_at", { ascending: false })
@@ -106,9 +124,14 @@ export async function getMechanics({
   }
 
   const total = mechanicsResponse.count ?? 0
+  const rows = mechanicsResponse.data ?? []
+  const workshopPhotoUrls = await getSignedStorageUrls(
+    WORKSHOP_PHOTO_BUCKET,
+    rows.flatMap((row) => row.workshop_photos ?? [])
+  )
 
   return {
-    rows: (mechanicsResponse.data ?? []).map(mapMechanic),
+    rows: rows.map((row) => mapMechanic(row, workshopPhotoUrls)),
     total,
     page: safePage,
     pageCount: Math.max(1, Math.ceil(total / MECHANICS_PAGE_SIZE)),
@@ -126,7 +149,10 @@ async function getPendingMechanicCount(): Promise<number> {
   return count ?? 0
 }
 
-function mapMechanic(row: RawMechanicRow): Mechanic {
+function mapMechanic(
+  row: RawMechanicRow,
+  workshopPhotoUrls: Map<string, string>
+): Mechanic {
   const status: MechanicStatus = row.is_verified ? "ACTIVE" : "PENDING"
   const coordinate = formatCoordinate(row.current_lat, row.current_lng)
 
@@ -135,12 +161,29 @@ function mapMechanic(row: RawMechanicRow): Mechanic {
     fullName: row.profiles.full_name?.trim() || "Tanpa Nama",
     email: row.profiles.email,
     phone: row.profiles.phone_number,
+    avatarUrl: row.profiles.avatar_url,
     workshopName: row.workshop_name?.trim() || null,
+    workshopAddress: row.workshop_address?.trim() || null,
     location: row.workshop_address?.trim() || coordinate || "Belum diisi",
+    coordinate,
     status,
     isOnline: row.is_online,
+    isAvailable: row.is_available,
+    bio: row.bio?.trim() || null,
+    experienceYears: row.experience_years,
+    skills: row.skills ?? [],
+    specializations: row.vehicle_specialization ?? [],
+    certifications: row.certifications ?? [],
+    identityNumber: row.identity_number?.trim() || null,
+    workshopPhotoUrls: (row.workshop_photos ?? [])
+      .map((path) => workshopPhotoUrls.get(path))
+      .filter((url): url is string => Boolean(url)),
     rating: Number(row.rating_avg ?? 0),
+    ratingCount: row.rating_count ?? 0,
     totalJobs: row.total_jobs ?? 0,
+    verifiedAt: row.verified_at,
+    lastLocationAt: row.last_location_at,
     joinedAt: row.created_at,
+    updatedAt: row.updated_at,
   }
 }

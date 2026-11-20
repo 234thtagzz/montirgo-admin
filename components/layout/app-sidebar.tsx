@@ -4,8 +4,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
+  MessageSquareWarning,
   ReceiptText,
-  Scale,
   Wrench,
 } from "lucide-react"
 
@@ -43,9 +43,9 @@ const navigation = [
     exact: false,
   },
   {
-    title: "Sengketa",
-    href: "/sengketa",
-    icon: Scale,
+    title: "Keluhan",
+    href: "/keluhan",
+    icon: MessageSquareWarning,
     exact: false,
   },
 ]

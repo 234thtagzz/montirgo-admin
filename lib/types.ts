@@ -5,13 +5,28 @@ export type Mechanic = {
   fullName: string
   email: string | null
   phone: string | null
+  avatarUrl: string | null
   workshopName: string | null
+  workshopAddress: string | null
   location: string
+  coordinate: string | null
   status: MechanicStatus
   isOnline: boolean
+  isAvailable: boolean
+  bio: string | null
+  experienceYears: number | null
+  skills: string[]
+  specializations: string[]
+  certifications: string[]
+  identityNumber: string | null
+  workshopPhotoUrls: string[]
   rating: number
+  ratingCount: number
   totalJobs: number
+  verifiedAt: string | null
+  lastLocationAt: string | null
   joinedAt: string
+  updatedAt: string
 }
 
 export type TransactionStatus =
@@ -56,6 +71,40 @@ export type Transaction = {
   createdAt: string
   items: InvoiceItem[]
   payment: TransactionPayment | null
+}
+
+export type ComplaintCategory =
+  | "pesanan"
+  | "pembayaran"
+  | "montir"
+  | "aplikasi"
+  | "lainnya"
+
+export type ComplaintStatus = "open" | "in_progress" | "resolved" | "closed"
+
+export type ComplaintReporterRole = "client" | "mechanic"
+
+export type Complaint = {
+  id: string
+  subject: string
+  description: string
+  category: ComplaintCategory
+  status: ComplaintStatus
+  reporterId: string
+  reporterName: string
+  reporterEmail: string | null
+  reporterPhone: string | null
+  reporterRole: ComplaintReporterRole
+  requestId: string
+  orderIssue: string
+  orderStatus: string
+  orderCreatedAt: string
+  photoUrls: string[]
+  adminReply: string | null
+  resolvedAt: string | null
+  resolvedByName: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 export type PaginatedResult<T> = {

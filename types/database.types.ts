@@ -47,6 +47,13 @@ export type Database = {
             foreignKeyName: "activity_logs_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activity_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -100,6 +107,13 @@ export type Database = {
             foreignKeyName: "ai_diagnoses_request_id_fkey"
             columns: ["request_id"]
             isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_diagnoses_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
             referencedRelation: "mechanic_open_request_view"
             referencedColumns: ["id"]
           },
@@ -108,6 +122,107 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      complaints: {
+        Row: {
+          admin_reply: string | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          photo_paths: string[]
+          reporter_id: string
+          reporter_role: string
+          request_id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          admin_reply?: string | null
+          category: string
+          created_at?: string
+          description: string
+          id?: string
+          photo_paths?: string[]
+          reporter_id: string
+          reporter_role?: string
+          request_id: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          admin_reply?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          photo_paths?: string[]
+          reporter_id?: string
+          reporter_role?: string
+          request_id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "complaints_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "mechanic_open_request_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -160,6 +275,13 @@ export type Database = {
             foreignKeyName: "earnings_mechanic_id_fkey"
             columns: ["mechanic_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "earnings_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -167,7 +289,21 @@ export type Database = {
             foreignKeyName: "earnings_payment_id_fkey"
             columns: ["payment_id"]
             isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
+            referencedColumns: ["payment_id"]
+          },
+          {
+            foreignKeyName: "earnings_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
             referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "earnings_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: true
+            referencedRelation: "admin_transaction_overview"
             referencedColumns: ["id"]
           },
           {
@@ -219,6 +355,13 @@ export type Database = {
             foreignKeyName: "locations_request_id_fkey"
             columns: ["request_id"]
             isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locations_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
             referencedRelation: "mechanic_open_request_view"
             referencedColumns: ["id"]
           },
@@ -227,6 +370,13 @@ export type Database = {
             columns: ["request_id"]
             isOneToOne: false
             referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "locations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
             referencedColumns: ["id"]
           },
           {
@@ -271,7 +421,21 @@ export type Database = {
             foreignKeyName: "mechanic_locations_mechanic_id_fkey"
             columns: ["mechanic_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mechanic_locations_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mechanic_locations_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
             referencedColumns: ["id"]
           },
           {
@@ -331,6 +495,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "mechanic_payout_accounts_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "mechanic_payout_accounts_mechanic_id_fkey"
             columns: ["mechanic_id"]
@@ -421,7 +592,21 @@ export type Database = {
             foreignKeyName: "mechanic_profiles_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: true
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mechanic_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mechanic_profiles_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
             referencedColumns: ["id"]
           },
           {
@@ -462,6 +647,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "mechanic_wallets_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: true
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "mechanic_wallets_mechanic_id_fkey"
             columns: ["mechanic_id"]
@@ -510,6 +702,13 @@ export type Database = {
             foreignKeyName: "notifications_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -548,7 +747,21 @@ export type Database = {
             foreignKeyName: "order_invoice_items_mechanic_id_fkey"
             columns: ["mechanic_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_invoice_items_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_invoice_items_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
             referencedColumns: ["id"]
           },
           {
@@ -593,6 +806,13 @@ export type Database = {
           payment_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "payment_events_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
+            referencedColumns: ["payment_id"]
+          },
           {
             foreignKeyName: "payment_events_payment_id_fkey"
             columns: ["payment_id"]
@@ -664,6 +884,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "payments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: true
+            referencedRelation: "admin_transaction_overview"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "payments_request_id_fkey"
             columns: ["request_id"]
@@ -773,6 +1000,13 @@ export type Database = {
             foreignKeyName: "reviews_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -780,7 +1014,21 @@ export type Database = {
             foreignKeyName: "reviews_mechanic_id_fkey"
             columns: ["mechanic_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: true
+            referencedRelation: "admin_transaction_overview"
             referencedColumns: ["id"]
           },
           {
@@ -823,6 +1071,13 @@ export type Database = {
             foreignKeyName: "service_request_assignment_rejections_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_request_assignment_rejections_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -846,6 +1101,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "mechanic_profiles"
             referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "service_request_assignment_rejections_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "service_request_assignment_rejections_request_id_fkey"
@@ -896,7 +1158,21 @@ export type Database = {
             foreignKeyName: "service_request_status_history_changed_by_fkey"
             columns: ["changed_by"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_request_status_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_request_status_history_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
             referencedColumns: ["id"]
           },
           {
@@ -999,7 +1275,21 @@ export type Database = {
             foreignKeyName: "service_requests_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
             referencedColumns: ["id"]
           },
           {
@@ -1063,6 +1353,13 @@ export type Database = {
             foreignKeyName: "vehicles_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicles_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -1103,6 +1400,13 @@ export type Database = {
           type?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "wallet_transactions_mechanic_id_fkey"
             columns: ["mechanic_id"]
@@ -1198,6 +1502,13 @@ export type Database = {
             foreignKeyName: "withdrawals_mechanic_id_fkey"
             columns: ["mechanic_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "withdrawals_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -1212,6 +1523,196 @@ export type Database = {
       }
     }
     Views: {
+      admin_complaint_overview: {
+        Row: {
+          admin_reply: string | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          order_created_at: string | null
+          order_issue: string | null
+          order_status: string | null
+          photo_paths: string[] | null
+          reporter_email: string | null
+          reporter_id: string | null
+          reporter_name: string | null
+          reporter_phone: string | null
+          reporter_role: string | null
+          request_id: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string | null
+          subject: string | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "complaints_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "admin_transaction_overview"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "mechanic_open_request_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "service_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "complaints_resolved_by_fkey"
+            columns: ["resolved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_transaction_overview: {
+        Row: {
+          accepted_at: string | null
+          additional_notes: string | null
+          address: string | null
+          arrived_at: string | null
+          client_email: string | null
+          client_id: string | null
+          client_name: string | null
+          client_phone: string | null
+          completed_at: string | null
+          contact_phone: string | null
+          created_at: string | null
+          currency: string | null
+          id: string | null
+          invoice_item_count: number | null
+          invoice_total: number | null
+          issue_description: string | null
+          lat: number | null
+          license_plate: string | null
+          lng: number | null
+          mechanic_email: string | null
+          mechanic_id: string | null
+          mechanic_name: string | null
+          mechanic_phone: string | null
+          net_amount: number | null
+          paid_at: string | null
+          payment_amount: number | null
+          payment_id: string | null
+          payment_method: string | null
+          payment_method_used: string | null
+          payment_status: string | null
+          platform_fee: number | null
+          price_amount: number | null
+          status: string | null
+          symptoms: string | null
+          vehicle_brand: string | null
+          vehicle_id: string | null
+          vehicle_model: string | null
+          vehicle_type: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_user_directory: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          certifications: string[] | null
+          client_request_count: number | null
+          created_at: string | null
+          current_lat: number | null
+          current_lng: number | null
+          email: string | null
+          experience_years: number | null
+          full_name: string | null
+          id: string | null
+          identity_number: string | null
+          is_available: boolean | null
+          is_online: boolean | null
+          is_verified: boolean | null
+          last_location_at: string | null
+          mechanic_request_count: number | null
+          phone_number: string | null
+          rating_avg: number | null
+          rating_count: number | null
+          role: string | null
+          skills: string[] | null
+          total_earned: number | null
+          total_jobs: number | null
+          total_spent: number | null
+          updated_at: string | null
+          vehicle_count: number | null
+          vehicle_specialization: string[] | null
+          verified_at: string | null
+          workshop_address: string | null
+          workshop_name: string | null
+        }
+        Relationships: []
+      }
       mechanic_assignment_profile: {
         Row: {
           avatar_url: string | null
@@ -1232,6 +1733,13 @@ export type Database = {
           workshop_photo: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "mechanic_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "mechanic_profiles_profile_id_fkey"
             columns: ["profile_id"]
@@ -1263,6 +1771,13 @@ export type Database = {
           workshop_photo: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "mechanic_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "mechanic_profiles_profile_id_fkey"
             columns: ["profile_id"]
@@ -1303,6 +1818,13 @@ export type Database = {
             foreignKeyName: "service_requests_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -1324,89 +1846,17 @@ export type Database = {
             foreignKeyName: "reviews_mechanic_id_fkey"
             columns: ["mechanic_id"]
             isOneToOne: false
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_mechanic_id_fkey"
+            columns: ["mechanic_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
-      }
-      admin_transaction_overview: {
-        Row: {
-          accepted_at: string | null
-          additional_notes: string | null
-          address: string | null
-          arrived_at: string | null
-          client_email: string | null
-          client_id: string
-          client_name: string | null
-          client_phone: string | null
-          completed_at: string | null
-          contact_phone: string
-          created_at: string
-          currency: string
-          id: string
-          invoice_item_count: number
-          invoice_total: number
-          issue_description: string
-          lat: number
-          lng: number
-          mechanic_email: string | null
-          mechanic_id: string | null
-          mechanic_name: string | null
-          mechanic_phone: string | null
-          payment_amount: number | null
-          payment_id: string | null
-          payment_method: string | null
-          payment_method_used: string | null
-          payment_status: string | null
-          paid_at: string | null
-          platform_fee: number | null
-          net_amount: number | null
-          price_amount: number | null
-          status: string
-          symptoms: string | null
-          vehicle_brand: string | null
-          vehicle_id: string | null
-          vehicle_model: string | null
-          vehicle_type: string | null
-          license_plate: string | null
-        }
-        Relationships: []
-      }
-      admin_user_directory: {
-        Row: {
-          avatar_url: string | null
-          bio: string | null
-          certifications: string[] | null
-          client_request_count: number
-          created_at: string
-          current_lat: number | null
-          current_lng: number | null
-          email: string | null
-          experience_years: number | null
-          full_name: string | null
-          id: string
-          identity_number: string | null
-          is_available: boolean | null
-          is_online: boolean | null
-          is_verified: boolean | null
-          last_location_at: string | null
-          mechanic_request_count: number
-          phone_number: string | null
-          rating_avg: number | null
-          rating_count: number | null
-          role: string
-          skills: string[] | null
-          total_earned: number
-          total_jobs: number | null
-          total_spent: number
-          updated_at: string
-          vehicle_count: number
-          vehicle_specialization: string[] | null
-          verified_at: string | null
-          workshop_address: string | null
-          workshop_name: string | null
-        }
-        Relationships: []
       }
     }
     Functions: {
@@ -1645,7 +2095,22 @@ export type Database = {
       }
       set_user_role: {
         Args: { p_role: string; p_user_id: string }
-        Returns: Database["public"]["Tables"]["profiles"]["Row"]
+        Returns: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          phone_number: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       setting_int: {
         Args: { p_default: number; p_key: string }
@@ -1789,6 +2254,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["client", "mechanic", "admin"],
+    },
   },
 } as const

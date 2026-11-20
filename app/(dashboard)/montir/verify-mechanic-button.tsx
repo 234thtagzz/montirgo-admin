@@ -23,14 +23,17 @@ import {
 
 const initialState: VerifyMechanicState = { status: "idle", message: "" }
 
-export function VerifyMechanicButton({
+export function VerifyMechanicForm({
   mechanicId,
-  mechanicName,
+  onSuccess,
+  label = "Ya, verifikasi",
+  className,
 }: {
   mechanicId: string
-  mechanicName: string
+  onSuccess?: () => void
+  label?: string
+  className?: string
 }) {
-  const [open, setOpen] = useState(false)
   const [pending, startTransition] = useTransition()
 
   function handleSubmit(formData: FormData) {
@@ -39,12 +42,32 @@ export function VerifyMechanicButton({
 
       if (result.status === "success") {
         toast.success(result.message)
-        setOpen(false)
+        onSuccess?.()
       } else {
         toast.error(result.message)
       }
     })
   }
+
+  return (
+    <form action={handleSubmit} className={className}>
+      <Input type="hidden" name="mechanicId" value={mechanicId} />
+      <Button type="submit" size="sm" disabled={pending}>
+        {pending ? <Loader2 className="animate-spin" /> : <ShieldCheck />}
+        {pending ? "Memverifikasi…" : label}
+      </Button>
+    </form>
+  )
+}
+
+export function VerifyMechanicButton({
+  mechanicId,
+  mechanicName,
+}: {
+  mechanicId: string
+  mechanicName: string
+}) {
+  const [open, setOpen] = useState(false)
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -78,18 +101,15 @@ export function VerifyMechanicButton({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline" size="sm" disabled={pending}>
+            <Button variant="outline" size="sm">
               Batal
             </Button>
           </DialogClose>
 
-          <form action={handleSubmit}>
-            <Input type="hidden" name="mechanicId" value={mechanicId} />
-            <Button type="submit" size="sm" disabled={pending}>
-              {pending ? <Loader2 className="animate-spin" /> : <ShieldCheck />}
-              {pending ? "Memverifikasi…" : "Ya, verifikasi"}
-            </Button>
-          </form>
+          <VerifyMechanicForm
+            mechanicId={mechanicId}
+            onSuccess={() => setOpen(false)}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>

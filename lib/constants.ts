@@ -1,5 +1,6 @@
 export const MECHANICS_PAGE_SIZE = 10
 export const TRANSACTIONS_PAGE_SIZE = 10
+export const COMPLAINTS_PAGE_SIZE = 10
 
 /**
  * Ambang "perlu ditinjau" untuk memantau harga yang tidak wajar.

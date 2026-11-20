@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import {
   BadgeCheck,
+  Briefcase,
   MapPin,
   Phone,
   Wrench,
@@ -11,7 +12,7 @@ import { EmptyState } from "@/components/data-table/empty-state"
 import { FilterBar } from "@/components/data-table/filter-bar"
 import { TablePagination } from "@/components/data-table/table-pagination"
 import { PageHeader } from "@/components/page-header"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { requireAdmin } from "@/lib/auth"
@@ -28,6 +29,7 @@ import {
 import { getMechanicStatusMeta } from "@/lib/status"
 import type { Mechanic } from "@/lib/types"
 
+import { MechanicDetailDialog } from "./mechanic-detail-dialog"
 import { VerifyMechanicButton } from "./verify-mechanic-button"
 
 export const metadata = {
@@ -83,6 +85,9 @@ async function MechanicsSection({
       cell: (mechanic) => (
         <div className="flex items-center gap-3">
           <Avatar className="size-8">
+            {mechanic.avatarUrl ? (
+              <AvatarImage src={mechanic.avatarUrl} alt={mechanic.fullName} />
+            ) : null}
             <AvatarFallback className="bg-primary/10 text-[11px] font-semibold text-primary">
               {getInitials(mechanic.fullName)}
             </AvatarFallback>
@@ -99,6 +104,9 @@ async function MechanicsSection({
             </div>
             <p className="truncate text-xs text-muted-foreground">
               {mechanic.workshopName ?? "Montir panggilan"}
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Bergabung {formatDate(mechanic.joinedAt)}
             </p>
           </div>
         </div>
@@ -120,6 +128,37 @@ async function MechanicsSection({
       ),
     },
     {
+      id: "profile",
+      header: "Profil",
+      className: "hidden xl:table-cell",
+      cell: (mechanic) => (
+        <div className="space-y-1 text-xs whitespace-normal">
+          <p className="flex items-center gap-1.5">
+            <Briefcase className="size-3 text-muted-foreground" />
+            {mechanic.experienceYears !== null
+              ? `${mechanic.experienceYears} tahun pengalaman`
+              : "Pengalaman belum diisi"}
+          </p>
+          <p className="text-muted-foreground">
+            {mechanic.skills.length} keahlian ·{" "}
+            {mechanic.certifications.length} sertifikasi
+          </p>
+          <p className="text-muted-foreground">
+            {mechanic.workshopPhotoUrls.length} foto bengkel ·{" "}
+            <span
+              className={
+                mechanic.identityNumber
+                  ? undefined
+                  : "text-amber-700 dark:text-amber-400"
+              }
+            >
+              identitas {mechanic.identityNumber ? "terisi" : "belum diisi"}
+            </span>
+          </p>
+        </div>
+      ),
+    },
+    {
       id: "location",
       header: "Lokasi",
       className: "hidden lg:table-cell",
@@ -128,16 +167,6 @@ async function MechanicsSection({
           <MapPin className="mt-0.5 size-3 shrink-0" />
           <span className="line-clamp-2">{mechanic.location}</span>
         </p>
-      ),
-    },
-    {
-      id: "joinedAt",
-      header: "Bergabung",
-      className: "hidden xl:table-cell whitespace-nowrap",
-      cell: (mechanic) => (
-        <span className="text-xs text-muted-foreground">
-          {formatDate(mechanic.joinedAt)}
-        </span>
       ),
     },
     {
@@ -162,19 +191,23 @@ async function MechanicsSection({
     {
       id: "actions",
       header: <span className="sr-only">Aksi</span>,
-      className: "w-36 text-right",
-      cell: (mechanic) =>
-        mechanic.status === "PENDING" ? (
-          <VerifyMechanicButton
-            mechanicId={mechanic.id}
-            mechanicName={mechanic.fullName}
-          />
-        ) : (
-          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-            <BadgeCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-            Terverifikasi
-          </span>
-        ),
+      className: "w-52 text-right",
+      cell: (mechanic) => (
+        <div className="flex items-center justify-end gap-2">
+          <MechanicDetailDialog mechanic={mechanic} />
+          {mechanic.status === "PENDING" ? (
+            <VerifyMechanicButton
+              mechanicId={mechanic.id}
+              mechanicName={mechanic.fullName}
+            />
+          ) : (
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+              <BadgeCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+              Terverifikasi
+            </span>
+          )}
+        </div>
+      ),
     },
   ]
 
