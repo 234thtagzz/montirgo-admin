@@ -113,3 +113,19 @@ export type PaginatedResult<T> = {
   page: number
   pageCount: number
 }
+
+// --------------------------------------------------------------------------
+// Client type – represents a customer (no verification workflow needed)
+// --------------------------------------------------------------------------
+export type Client = {
+  id: string
+  fullName: string
+  email: string | null
+  phone: string | null
+  avatarUrl: string | null
+  identityNumber: string | null
+  totalRequests: number
+  totalSpent: number
+  joinedAt: string
+  updatedAt: string
+}

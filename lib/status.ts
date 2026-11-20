@@ -134,3 +134,10 @@ export function getPaymentStatusLabel(status: string | null | undefined) {
   }
   return status ? (labels[status] ?? status) : "—"
 }
+
+export function getClientStatusMeta(_status: "ACTIVE") {
+  return {
+    label: "Aktif",
+    className: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  }
+}

@@ -925,6 +925,42 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_identities: {
+        Row: {
+          created_at: string
+          identity_number: string
+          profile_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          identity_number: string
+          profile_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          identity_number?: string
+          profile_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_identities_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "admin_user_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_identities_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -932,6 +968,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          identity_number: string | null
           phone_number: string | null
           role: Database["public"]["Enums"]["app_role"]
           updated_at: string
@@ -942,6 +979,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          identity_number?: string | null
           phone_number?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
@@ -952,6 +990,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          identity_number?: string | null
           phone_number?: string | null
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
@@ -2101,6 +2140,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          identity_number: string | null
           phone_number: string | null
           role: Database["public"]["Enums"]["app_role"]
           updated_at: string

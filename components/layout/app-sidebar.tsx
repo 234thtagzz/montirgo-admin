@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   MessageSquareWarning,
   ReceiptText,
+  Users,
   Wrench,
 } from "lucide-react"
 
@@ -34,6 +35,12 @@ const navigation = [
     title: "Montir",
     href: "/montir",
     icon: Wrench,
+    exact: false,
+  },
+  {
+    title: "Klien",
+    href: "/client",
+    icon: Users,
     exact: false,
   },
   {

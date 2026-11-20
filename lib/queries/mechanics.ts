@@ -47,6 +47,7 @@ type RawMechanicRow = {
     email: string | null
     phone_number: string | null
     avatar_url: string | null
+    identity_number: string | null
   }
 }
 
@@ -104,7 +105,7 @@ export async function getMechanics({
        rating_avg, rating_count, total_jobs, current_lat, current_lng, last_location_at,
        bio, experience_years, skills, vehicle_specialization, certifications,
        identity_number, workshop_photos, verified_at, created_at, updated_at,
-       profiles!mechanic_profiles_profile_id_fkey!inner(id, full_name, email, phone_number, avatar_url)`,
+       profiles!mechanic_profiles_profile_id_fkey!inner(id, full_name, email, phone_number, avatar_url, identity_number)`,
       { count: "exact" }
     )
     .order("created_at", { ascending: false })
@@ -174,7 +175,7 @@ function mapMechanic(
     skills: row.skills ?? [],
     specializations: row.vehicle_specialization ?? [],
     certifications: row.certifications ?? [],
-    identityNumber: row.identity_number?.trim() || null,
+    identityNumber: row.profiles?.identity_number?.trim() || null,
     workshopPhotoUrls: (row.workshop_photos ?? [])
       .map((path) => workshopPhotoUrls.get(path))
       .filter((url): url is string => Boolean(url)),
